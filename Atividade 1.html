@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Obras de Arte</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        button {
+            background-color: #e68535;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #e68535;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e68535;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .description {
+            max-width: 300px;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Obras de Arte</h1>
+    <button onclick="criaTabela()">Criar Nova Tabela</button>
+
+    <script>
+        async function criaTabela() {
+            let existingTable = document.querySelector('table');
+            if (existingTable) {
+                existingTable.remove();
+            }
+
+            let table = document.createElement('table');
+            let headerRow = document.createElement('tr');
+            let headers = ['Título', 'Artista', 'Data', 'Meio', 'Descrição'];
+
+            headers.forEach(headerText => {
+                let header = document.createElement('th');
+                header.textContent = headerText;
+                headerRow.appendChild(header);
+            });
+
+            table.appendChild(headerRow);
+
+            try {
+                let response = await fetch('https://api.artic.edu/api/v1/artworks');
+                let data = await response.json();
+
+                function getRandomData(arr, num) {
+                    const shuffled = arr.sort(() => 0.5 - Math.random());
+                    return shuffled.slice(0, num);
+                }
+
+                let randomData = getRandomData(data.data, 4);
+
+                randomData.forEach(item => {
+                    let row = document.createElement('tr');
+                    let cellTitle = document.createElement('td');
+                    let cellArtist = document.createElement('td');
+                    let cellDate = document.createElement('td');
+                    let cellMedium = document.createElement('td');
+                    let cellDescription = document.createElement('td');
+                    
+                    cellTitle.textContent = item.title || 'N/A';
+                    cellArtist.textContent = item.artist_display || 'N/A';
+                    cellDate.textContent = item.date_display || 'N/A';
+                    cellMedium.textContent = item.medium_display || 'N/A';
+
+                    let descriptionText = item.description || 'N/A';
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(descriptionText, 'text/html');
+                    cellDescription.textContent = doc.body.textContent || 'N/A';
+
+                    cellDescription.className = 'description';
+
+                    row.appendChild(cellTitle);
+                    row.appendChild(cellArtist);
+                    row.appendChild(cellDate);
+                    row.appendChild(cellMedium);
+                    row.appendChild(cellDescription);
+
+                    table.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+
+            document.body.appendChild(table);
+        }
+    </script>
+</body>
+</html>
