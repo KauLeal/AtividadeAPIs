@@ -1,0 +1,34 @@
+/* Estilo global */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff; /* Um azul claro para o fundo */
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Estilo para os títulos principais */
+h1 {
+  color: #1e90ff; /* Azul Dodger */
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilo para os parágrafos */
+p {
+  color: #4682b4; /* Azul Steel */
+  font-size: 1.2em;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Estilo específico para o link */
+a {
+  color: #4169e1; /* Azul Royal */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
